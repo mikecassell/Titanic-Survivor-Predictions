@@ -2,6 +2,7 @@ import csv as csv
 import numpy as np
 import pandas as pd
 from sklearn import tree
+from sklearn.ensemble import RandomForestClassifier
 from numpy import *
 
 useFeatures = ['Pclass','Sex','Fare']
@@ -34,7 +35,7 @@ print(df)
 
 ftr = array(df[useFeatures])
 lab = array(df['Survived'])
-clf = tree.DecisionTreeClassifier()
+clf = RandomForestClassifier(criterion='gini')
 clf.fit(ftr, lab)
 
 print('Training Score:' + str(clf.score(ftr, lab)))
