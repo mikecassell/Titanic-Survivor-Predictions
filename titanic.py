@@ -5,7 +5,7 @@ from sklearn import tree
 from sklearn.ensemble import RandomForestClassifier
 from numpy import *
 
-useFeatures = ['Pclass','Sex','Fare']
+useFeatures = ['Pclass','Sex','Fare','Age']
 def parse_Fares(fare):
     return(np.floor(fare/10) * 10)
     
@@ -31,15 +31,26 @@ def targetFeatureSplit( data ):
 df = pd.DataFrame.from_csv('train.csv')
 df = prepData(df)
 
-ftr = array(df[useFeatures])
-lab = array(df['Survived'])
-clf = RandomForestClassifier(criterion='gini')
-clf.fit(ftr, lab)
+from sklearn.cross_validation import StratifiedShuffleSplit
+kf = KFold(len(df), n_folds=100)
+validator = StratifiedShuffleSplit(lab, 20, test_size=0.5, random_state=42)
+scoreData = []
 
-print('Training Score:' + str(clf.score(ftr, lab)))
+for train_index, test_index in validator:
+    ftr = array(df[useFeatures])
+    lab = array(df['Survived'])
+    clf = RandomForestClassifier(criterion='gini')
+    clf.fit(ftr[train_index], lab[train_index])
+    scoreData.append(clf.score(ftr[test_index], lab[test_index]))
 
-dfTest = pd.DataFrame.from_csv('test.csv')
-dfTest = prepData(dfTest)
+print('Mean Training Score: ' + str(np.mean(scoreData)))
 
-dfTest['Survived'] = clf.predict(array(dfTest[useFeatures]))
-dfTest['Survived'].to_csv('pred.rfc.ClassGenderFare.csv')
+#dfTest = pd.DataFrame.from_csv('test.csv')
+#dfTest = prepData(dfTest)
+#dfTest['Survived'] = clf.predict(array(dfTest[useFeatures]))
+#dfTest['Survived'].to_csv('pred.rfc.ClassGenderFare.csv')
+
+
+
+
+
