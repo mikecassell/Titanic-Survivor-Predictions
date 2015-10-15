@@ -38,7 +38,8 @@ clf.fit(ftr, lab)
 
 print('Training Score:' + str(clf.score(ftr, lab)))
 
+dfTest = pd.DataFrame.from_csv('test.csv')
+dfTest = prepData(dfTest)
 
-
-
-
+dfTest['Survived'] = clf.predict(array(dfTest[useFeatures]))
+dfTest['Survived'].to_csv('pred.rfc.ClassGenderFare.csv')
