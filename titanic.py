@@ -31,8 +31,6 @@ def targetFeatureSplit( data ):
 df = pd.DataFrame.from_csv('train.csv')
 df = prepData(df)
 
-print(df)
-
 ftr = array(df[useFeatures])
 lab = array(df['Survived'])
 clf = RandomForestClassifier(criterion='gini')
@@ -40,14 +38,7 @@ clf.fit(ftr, lab)
 
 print('Training Score:' + str(clf.score(ftr, lab)))
 
-df = pd.DataFrame.from_csv('test.csv', index_col=None)
-df = prepData(df)
-ftr = array(df[useFeatures])
 
-pred = clf.predict(ftr)
-res = zip(df['PassengerId'], pred)
 
-with open("results.3.csv", "wb") as f:
-    writer = csv.writer(f)
-    writer.writerow(['PassengerId','Survived'])
-    writer.writerows(res)
+
+
